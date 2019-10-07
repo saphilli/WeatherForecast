@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Weatherman</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+<link href="https://fonts.googleapis.com/css?family=Fira+Sans|Squada+One&display=swap" rel="stylesheet">
+<div class="nav-bar">
+  <h1>Weatherman</h1>
+</div>
+</head>
+<body>
+
+
+  <div id= "app">
+    <div class = "searchBar">
+      <div class="input-label">
+      <label> Please enter a city </label>
+      </div>
+      <input v-model="location" list ="citylist" placeholder="Where are you headed?">
+      <datalist id="citylist">
+      <option value="Dublin,IE">IE</option>
+      <option value="London,UK">UK</option>
+    </datalist>
+    <button v-on:click="getWeather">Submit</button>
+      </input>
+    </div>
+  <div class="image">
+    <img v-bind:src="image">
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    image: './img.jpg',
+    location: null
+  },
+  methods: {
+     getWeather: fetchWeather
+   }
+ })
+
+function fetchWeather() {
+  let prom =  fetch('http://localhost:8000', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json, text/plain',
+      'Content-Type': 'application/json'
+    },
+    mode: 'cors',
+    body: JSON.stringify({
+      q: app.location,
+      mode: "json",
+      i: "524901",
+      APPID: "09bc75336cf016046646bde45794b338"
+    })
+  })
+   prom.then((res) => {
+     app.location = null;
+     //console.log();
+      return res.json()
+   })
+    prom.then((json) => {
+     console.log(json)
+   })
+ }
+</script>
+</body>
+</html>
